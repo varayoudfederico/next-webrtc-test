@@ -14,3 +14,32 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.video-container {
+  background: black;
+  display: inline-block;
+  line-height: 0;
+  max-width: 100%;
+  width: 100%;
+  max-width: 768px;
+}
+
+#logs-header {
+  margin-top: 20px;
+}
+
+.preserve-whitespace {
+  white-space: pre-wrap;
+}
+
+video {
+  width: 100%;
+}
+
+pre .error {
+  color: red;
+}
+
+pre .warn {
+  color: goldenrod;
+}

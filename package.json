@@ -9,9 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "amazon-kinesis-video-streams-webrtc": "^1.0.8",
+    "aws-sdk": "^2.1091.0",
+    "crypto-js": "^4.1.1",
     "next": "12.1.0",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "simple-peer": "^9.11.1",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/node": "17.0.21",

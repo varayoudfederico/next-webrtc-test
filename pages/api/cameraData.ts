@@ -11,11 +11,10 @@ export default async function handler(
 ) {
   const access_token = req.query.token;
   const mac = req.query.mac;
-  console.log("access_token", access_token);
-  console.log("mac", mac);
   const timestamp = new Date().getTime();
   const terminal_id = phone_id.replace(/-/g, "");
   const request_id = uuidv4().replace(/-/g, "");
+
   const cameraData = {
     app_name: "com.hualai.geniuslife",
     request_id,
@@ -29,7 +28,6 @@ export default async function handler(
     os_version: "4.19.132",
     terminal_id: phone_id,
   };
-  console.log("cameraData", cameraData);
 
   const response = await fetch(`https://${url}/webrtc/v1/auth/get`, {
     method: "POST",

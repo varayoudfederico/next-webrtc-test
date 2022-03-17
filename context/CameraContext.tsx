@@ -13,13 +13,6 @@ class CustomSigner {
   }
 }
 
-const defaultState = {
-  cameras: [],
-  videoRef: null,
-  selectCamera: (cameraMac) => null,
-  viewCamWithCredentials: (cameraChannel) => null,
-};
-
 const config = {
   region: process.env.NEXT_PUBLIC_REGION,
 };
@@ -32,6 +25,13 @@ const credentials = {
 function getRandomClientId() {
   return Math.random().toString(36).substring(2).toUpperCase();
 }
+
+const defaultState = {
+  cameras: [],
+  videoRef: null,
+  selectCamera: (cameraMac) => null,
+  viewCamWithCredentials: (cameraChannel) => null,
+};
 
 export const CameraContext = createContext(defaultState);
 

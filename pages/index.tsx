@@ -43,6 +43,7 @@ const Home: NextPage = () => {
             autoPlay
             playsInline
             controls
+            muted
           />
         </div>
         <p>Camaras usando AWS ID y Secret</p>

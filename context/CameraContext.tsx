@@ -334,12 +334,12 @@ export const CameraProvider = ({ children }) => {
         credential: cameraData.ice_uri.turn_uri_list[1].password,
       },
     ];
+    console.log("ICE Servers: ", iceServers);
 
     //Esta URL es la que se usa para iniciar la conexión webSocket.
     //Actualmente no esta funcionando, por lo que se debe usar las credentials de AWS.
     const signedURL = cameraData.wss_sign_url;
     console.log("Signed URL: ", signedURL);
-    console.log("ICE Servers: ", iceServers);
 
     //El signalingClient es el que se encarga de comunicarse con la camara a través de un webSocket.
     //Los parametros channelARN, channelEndpoint, y region no van a ser necesarios cuando la signedURL funcione.
@@ -387,6 +387,7 @@ export const CameraProvider = ({ children }) => {
     });
 
     viewer.signalingClient.on("close", () => {
+      stopCurrentViewer();
       console.log("Conexión finalizada");
     });
 
@@ -432,7 +433,12 @@ export const CameraProvider = ({ children }) => {
 
   return (
     <CameraContext.Provider
-      value={{ cameras, videoRef, selectCamera, viewCamWithCredentials }}
+      value={{
+        cameras,
+        videoRef,
+        selectCamera,
+        viewCamWithCredentials,
+      }}
     >
       {children}
     </CameraContext.Provider>

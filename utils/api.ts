@@ -3,7 +3,7 @@ import CryptoJS from "crypto-js";
 const url = process.env.NEXT_PUBLIC_HUALAI_URL;
 const phone_id = process.env.NEXT_PUBLIC_HUALAI_PHONEID;
 
-export const login = async () => {
+export const fetchLogin = async () => {
   console.log("Iniciando sesión...");
   const timestamp = new Date().getTime();
   const password = process.env.NEXT_PUBLIC_HUALAI_PASSWORD;
@@ -36,7 +36,7 @@ export const login = async () => {
   return data;
 };
 
-export const getListOfDevices = async (token) => {
+export const fetchListOfDevices = async (token) => {
   console.log("Obteniendo lista de cámaras...");
   const timestamp = new Date().getTime();
 

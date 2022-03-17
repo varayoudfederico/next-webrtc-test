@@ -3,14 +3,8 @@ import Head from "next/head";
 import { useEffect } from "react";
 import { useCameraContext } from "../context/CameraContext";
 
-const cam1 = process.env.NEXT_PUBLIC_HUALAI_CHANNEL_CAM1;
-const cam2 = process.env.NEXT_PUBLIC_HUALAI_CHANNEL_CAM2;
-const cam3 = process.env.NEXT_PUBLIC_HUALAI_CHANNEL_CAM3;
-const cam4 = process.env.NEXT_PUBLIC_HUALAI_CHANNEL_CAM4;
-
 const Home: NextPage = () => {
-  const { cameras, selectCamera, videoRef, viewCamWithCredentials } =
-    useCameraContext();
+  const { cameras, selectCamera, videoRef } = useCameraContext();
 
   useEffect(() => {
     if (cameras.length) console.log("Cámaras: ", cameras);
@@ -45,21 +39,6 @@ const Home: NextPage = () => {
             controls
             muted
           />
-        </div>
-        <p>Camaras usando AWS ID y Secret</p>
-        <div>
-          <button onClick={() => viewCamWithCredentials(cam1)}>
-            Ver camara 1 (Con AWSID)
-          </button>
-          <button onClick={() => viewCamWithCredentials(cam2)}>
-            Ver camara 2 (Con AWSID)
-          </button>
-          <button onClick={() => viewCamWithCredentials(cam3)}>
-            Ver camara 3 (Con AWSID)
-          </button>
-          <button onClick={() => viewCamWithCredentials(cam4)}>
-            Ver camara 4 (Con AWSID)
-          </button>
         </div>
       </main>
     </div>

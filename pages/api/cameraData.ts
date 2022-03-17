@@ -12,7 +12,6 @@ export default async function handler(
   const access_token = req.query.token;
   const mac = req.query.mac;
   const timestamp = new Date().getTime();
-  const terminal_id = phone_id.replace(/-/g, "");
   const request_id = uuidv4().replace(/-/g, "");
 
   const cameraData = {
@@ -21,7 +20,7 @@ export default async function handler(
     timestamp,
     data: {
       device_id: mac,
-      client_id: "",
+      client_id: "229285051375271936",
     },
     app_version: "1.0.2",
     os_name: "Android",

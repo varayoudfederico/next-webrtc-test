@@ -4,7 +4,8 @@ import { useEffect } from "react";
 import { useCameraContext } from "../context/CameraContext";
 
 const Home: NextPage = () => {
-  const { cameras, selectCamera, videoRef } = useCameraContext();
+  const { cameras, selectCamera, videoRef, loading, error } =
+    useCameraContext();
 
   useEffect(() => {
     if (cameras.length) console.log("Cámaras: ", cameras);
@@ -40,6 +41,8 @@ const Home: NextPage = () => {
             muted
           />
         </div>
+        {loading && <p>Intentando conectar con la cámara...</p>}
+        {error && <p>{error}</p>}
       </main>
     </div>
   );

@@ -62,19 +62,15 @@ export const CameraProvider = ({ children }) => {
     //Detener conexiones previamente generadas
     stopCurrentViewer();
 
-    //Setear el src del video actual en null
     if (!videoRef || !videoRef.current) return;
     videoRef.current.srcObject = null;
 
     try {
-      //Obtener el access_token de la cuenta actual (en este momento hardcodeada, en un futuro viene del IDP)
       const { access_token } = await getAccessToken();
 
-      //Con el access_token obtenido, obtener los datos de la cámara.
+      //Con el access_token obtener los datos de la cámara.
       const cameraData = await getCameraData(access_token, cameraMAC);
 
-      //Estos son los datos para iniciar la conexión webRTC que llega de backend.
-      //Se lo mapea para que sea compatible con el formato de KVS.
       const iceServers = [
         {
           urls: cameraData.ice_uri.stun_uri,
@@ -95,12 +91,7 @@ export const CameraProvider = ({ children }) => {
       console.log("ICE Servers: ", iceServers);
 
       //Esta URL es la que se usa para iniciar la conexión webSocket.
-      const signedURL = cameraData.wss_sign_url;
-      // console.log("Signed URL: ", signedURL);
-
-      //Tiene que ser decodificada antes de pasarsela al signalingClient.
-      const decodedSignedURL = decodeURI(signedURL);
-      // console.log("Decoded SIGNED URL", decodedSignedURL);
+      const wssURL = decodeURI(cameraData.wss_sign_url);
 
       //El signalingClient es el que se encarga de comunicarse con la camara a través de un webSocket.
       //Los parametros channelARN, channelEndpoint, y region los obtiene de la signedURL, pero no pueden estar vacios asi que se envia cualquier caracter.
@@ -112,8 +103,8 @@ export const CameraProvider = ({ children }) => {
         clientId: getRandomClientId(),
         requestSigner: {
           getSignedURL: () => {
-            return new Promise((resolve, reject) => {
-              resolve(decodedSignedURL);
+            return new Promise((resolve) => {
+              resolve(wssURL);
             });
           },
         },
@@ -127,8 +118,6 @@ export const CameraProvider = ({ children }) => {
       };
       viewer.peerConnection = new RTCPeerConnection(RTCconfiguration);
 
-      //Añado eventos al websocket:
-
       //Cuando el websocket esta listo para recibir mensajes, se inicia la conexión webRTC enviando la SDPOffer.
       viewer.signalingClient.on("open", async () => {
         const offer = await viewer.peerConnection.createOffer({
@@ -141,12 +130,10 @@ export const CameraProvider = ({ children }) => {
         );
       });
 
-      //Cuando llega una respuesta SDP, se agrega a la conexión webRTC.
       viewer.signalingClient.on("sdpAnswer", async (answer) => {
         await viewer.peerConnection.setRemoteDescription(answer);
       });
 
-      //Cuando llega un ICE candidate, se agrega a la conexión webRTC.
       viewer.signalingClient.on("iceCandidate", (candidate) => {
         viewer.peerConnection.addIceCandidate(candidate);
       });
@@ -160,7 +147,6 @@ export const CameraProvider = ({ children }) => {
         console.error("Error en el signalingClient: ", error);
       });
 
-      //Enviar todos los candidatos ICE generados al backend.
       viewer.peerConnection.addEventListener(
         "icecandidate",
         ({ candidate }) => {

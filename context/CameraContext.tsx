@@ -9,7 +9,7 @@ function getRandomClientId() {
 const defaultState = {
   cameras: [],
   videoRef: null,
-  selectCamera: (cameraMac) => null,
+  selectCamera: (cameraMac: string) => null,
   loading: false,
   error: "",
 };
@@ -22,7 +22,7 @@ export const CameraProvider = ({ children }) => {
   const [cameras, setCameras] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const videoRef = useRef();
+  const videoRef = useRef<HTMLVideoElement>();
 
   let viewer = {
     signalingClient: null,
@@ -73,31 +73,25 @@ export const CameraProvider = ({ children }) => {
       //Con el access_token obtenido, obtener los datos de la cámara.
       const cameraData = await getCameraData(access_token, cameraMAC);
 
-      //En algunas situaciones el backend no envia los datos suficientes, en este caso se corta la conexión.
-      if (cameraData.ice_uri.turn_uri_list.length < 2) {
-        console.log("Faltan URLs de ICE, reintentar.");
-        setError("Faltan URLs de ICE, reintentar.");
-        setLoading(false);
-        return;
-      }
-
       //Estos son los datos para iniciar la conexión webRTC que llega de backend.
       //Se lo mapea para que sea compatible con el formato de KVS.
       const iceServers = [
         {
           urls: cameraData.ice_uri.stun_uri,
         },
-        {
-          urls: cameraData.ice_uri.turn_uri_list[0].uris,
-          username: cameraData.ice_uri.turn_uri_list[0].username,
-          credential: cameraData.ice_uri.turn_uri_list[0].password,
-        },
-        {
-          urls: cameraData.ice_uri.turn_uri_list[1].uris,
-          username: cameraData.ice_uri.turn_uri_list[1].username,
-          credential: cameraData.ice_uri.turn_uri_list[1].password,
-        },
       ];
+
+      console.log("ICE Servers: ", cameraData.ice_uri.turn_uri_list.length);
+
+      cameraData.ice_uri.turn_uri_list.forEach((item) => {
+        const turnServer = {
+          urls: item.uris,
+          username: item.username,
+          credential: item.password,
+        };
+        iceServers.push(turnServer);
+      });
+
       console.log("ICE Servers: ", iceServers);
 
       //Esta URL es la que se usa para iniciar la conexión webSocket.
@@ -118,7 +112,9 @@ export const CameraProvider = ({ children }) => {
         clientId: getRandomClientId(),
         requestSigner: {
           getSignedURL: () => {
-            return decodedSignedURL;
+            return new Promise((resolve, reject) => {
+              resolve(decodedSignedURL);
+            });
           },
         },
         systemClockOffset: 0,
@@ -128,7 +124,6 @@ export const CameraProvider = ({ children }) => {
       //Objeto que contiene toda la información necesaria para iniciar la conexión webRTC.
       const RTCconfiguration = {
         iceServers,
-        iceTransportPolicy: "all",
       };
       viewer.peerConnection = new RTCPeerConnection(RTCconfiguration);
 

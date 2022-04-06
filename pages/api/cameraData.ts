@@ -9,7 +9,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const access_token = req.query.token;
+  const access_token = req.query.token as string;
   const mac = req.query.mac;
   const timestamp = new Date().getTime();
   const request_id = uuidv4().replace(/-/g, "");

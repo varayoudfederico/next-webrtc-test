@@ -67,7 +67,6 @@ export const CameraProvider = ({ children }) => {
 
     try {
       const { access_token } = await getAccessToken();
-
       //Con el access_token obtener los datos de la cámara.
       const cameraData = await getCameraData(access_token, cameraMAC);
 
@@ -118,7 +117,7 @@ export const CameraProvider = ({ children }) => {
       };
       viewer.peerConnection = new RTCPeerConnection(RTCconfiguration);
 
-      //Cuando el websocket esta listo para recibir mensajes, se inicia la conexión webRTC enviando la SDPOffer.
+      //Se definen todos los handlers de los eventos que pueden llegar por el websocket:
       viewer.signalingClient.on("open", async () => {
         const offer = await viewer.peerConnection.createOffer({
           offerToReceiveAudio: true,

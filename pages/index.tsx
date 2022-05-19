@@ -41,7 +41,7 @@ const Home: NextPage = () => {
             muted
           />
         </div>
-        {loading && <p>Intentando conectar con la cámara...</p>}
+        {loading && <p>Connecting...</p>}
         {error && <p>{error}</p>}
       </main>
     </div>

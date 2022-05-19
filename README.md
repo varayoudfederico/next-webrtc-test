@@ -1,4 +1,4 @@
-WebRTC Connection Demo
+# WebRTC Connection Demo
 
 ## Getting Started
 
